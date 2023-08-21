@@ -1,6 +1,5 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'dart:typed_data';
-import 'package:from_css_color/from_css_color.dart'
 
 class CacheManager {
   final defaultCacheManager = DefaultCacheManager();

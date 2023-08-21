@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'image.dart';
+import 'package:flutter_application_1/weather.dart';
+// import 'image.dart';
 
 //  進入點
 void main() {
-  runApp(const DemoApp());
+  runApp(const WeatherPageInheritedWidget());
 }
 
 class DemoApp extends StatefulWidget {
