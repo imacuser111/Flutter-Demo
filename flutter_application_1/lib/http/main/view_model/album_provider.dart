@@ -9,15 +9,9 @@ import '../../model/response/podo/json.dart';
 class AlbumProvider with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
 
-  // Album? _album;
-
   ApiResponse get response {
     return _apiResponse;
   }
-
-  // Album? get album {
-  //   return _album;
-  // }
 
   fetchAlbumData(String title) {
     APIRequest apiRequest = FetchAlbumRequest(title);
