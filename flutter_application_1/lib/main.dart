@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/weather.dart';
-import 'package:provider/provider.dart';
 
 import 'navigator/v1/navigator_v1.dart';
-import 'navigator/v2/navigator_v2.dart';
 
 //  進入點
 void main() {

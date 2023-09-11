@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/navigator/v2/pages/items.page.dart';
 import '../app-router.delegate.dart';
 
 import 'settings.page.dart';

@@ -5,16 +5,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/navigator/v2/pages/settings.page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
-/// This sample app shows an app with two screens.
-///
-/// The first route '/' is mapped to [HomeScreen], and the second route
-/// '/details' is mapped to [DetailsScreen].
-///
-/// The buttons use context.go() to navigate to each destination. On mobile
-/// devices, each destination is deep-linkable and on the web, can be navigated
-/// to using the address bar.
-void main() => runApp(const MyApp());
+
+void main() { 
+  //建立URL策略，用以移除頁出現http://localhost:5654/#/的#字hash
+  usePathUrlStrategy();
+  runApp(const MyApp());
+}
 
 /// The route configuration.
 final GoRouter _router = GoRouter(
@@ -42,12 +40,13 @@ final GoRouter _router = GoRouter(
           ],
         ),
         GoRoute(
-              path: 'settings',
-              builder: (BuildContext context, GoRouterState state) {
-                // print('${state.pathParameters} 12313');
-                return const SettingsPage();
-              },
-            )
+          name: 'settings',
+          path: 'settings',
+          builder: (BuildContext context, GoRouterState state) {
+            // print('${state.pathParameters} 12313');
+            return const SettingsPage();
+          },
+        )
       ],
     ),
   ],
@@ -95,9 +94,12 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('DetailsScreen 123');
-    
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Details Screen')),
+      appBar: AppBar(
+        title: const Text('Details Screen'),
+        automaticallyImplyLeading: false, // 隱藏返回鈕
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () => context.go('/details/new'),
@@ -118,7 +120,10 @@ class NewScreen extends StatelessWidget {
     print('NewScreen 123');
 
     return Scaffold(
-      appBar: AppBar(title: const Text('New Screen')),
+      appBar: AppBar(
+        title: const Text('New Screen'),
+        automaticallyImplyLeading: false, // 隱藏返回鈕
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () => context.go('/'),
