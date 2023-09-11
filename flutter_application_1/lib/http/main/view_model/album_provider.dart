@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_1/http/model/request/album_request.dart';
 import 'package:flutter_application_1/http/model/request/api_request.dart';
-import 'package:provider/provider.dart';
 
 import '../../http_service.dart';
 import '../../model/apis/api_response.dart';
