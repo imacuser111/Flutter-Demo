@@ -1,12 +1,17 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-import 'navigator/v1/navigator_v1.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
+import 'image.dart';
 
 //  進入點
 void main() {
   // runApp(NavigatorV2App());
 
-  runApp(MyApp());
+  // runApp(MyApp());
+  runApp(const DemoApp());
   // runApp(const WeatherPageInheritedWidget());
 
   // runApp(ChangeNotifierProvider<WeatherProviderModel>(
@@ -57,7 +62,7 @@ class _DemoAppState extends State<DemoApp> {
           toolbarHeight: 100,
           backgroundColor: Colors.blue.withAlpha(0),
         ),
-        body: const Body(),
+        body: const Home(),
       ),
     );
   }
@@ -73,17 +78,17 @@ class AppBarTitle extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Container(
-            color: Colors.red,
-            child: const Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 5),
-                  child: FlutterLogo(),
-                ),
-                Text("Qpp"),
-              ],
-            )),
+        // Container(
+        //     color: Colors.red,
+        //     child: const Row(
+        //       children: [
+        //         Padding(
+        //           padding: EdgeInsets.only(right: 5),
+        //           child: FlutterLogo(),
+        //         ),
+        //         Text("Qpp"),
+        //       ],
+        //     )),
         Container(
           color: Colors.amber,
           child: const Text("123"),
@@ -93,43 +98,97 @@ class AppBarTitle extends StatelessWidget {
   }
 }
 
-class Body extends StatefulWidget {
-  const Body({super.key});
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<Body> createState() => _BodyState();
+  State<Home> createState() => _HomeState();
 }
 
-class _BodyState extends State<Body> {
-  int count = 0;
+class _HomeState extends State<Home> {
+  final String imageUrl =
+      'https://storage.googleapis.com/qpp_blockchain_test/Profile/A277C9AE4C10A9D5F23BB9F049F5D5344A671404D16EB40CF79A0ECEFEE811A9_Image1.png?v=${DateTime.now().millisecondsSinceEpoch}';
+  // 'https://static7.depositphotos.com/1044234/755/i/600/depositphotos_7553041-stock-photo-road-tripping.jpg';
+  final String imageUrl2 =
+      'https://picsum.photos/250?image=9'; // https://fastly.picsum.photos/id/9/250/250.jpg?hmac=tqDH5wEWHDN76mBIWEPzg1in6egMl49qZeguSaH9_VI
+
+  final customCacheManager = CustomCacheManager();
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    print(12312321);
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // getCachedNetworkImage('https://picsum.photos/250?image=9'),
-          // getNetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq6HRomJWKtFDvOelkYHwwjA-xe7Usq0JgWRkQDGWy&s'),
-          // getAssetImage('assets/image/46b9568828d8ae7d5fd00c2c9305127f.png'),
-          TextButton(
-            child: const Text(
-              "data",
-              textDirection: TextDirection.ltr,
-            ),
-            onPressed: () {
-              setState(() {
-                count++;
-              });
+          CachedNetworkImage(
+            key: UniqueKey(),
+            cacheKey: 'first_image',
+            cacheManager: customCacheManager.cacheManager,
+            imageUrl: imageUrl,
+            width: MediaQuery.of(context).size.width,
+            height: 250,
+            progressIndicatorBuilder: (context, url, progress) {
+              return ColoredBox(
+                color: Colors.black12,
+                child: Center(
+                    child: CircularProgressIndicator(
+                  value: progress.progress,
+                )),
+              );
             },
+            fit: BoxFit.cover,
+            errorWidget: (context, url, error) => const ColoredBox(
+              color: Colors.black12,
+              child: Icon(
+                Icons.error,
+                size: 50,
+                color: Colors.red,
+              ),
+            ),
           ),
-          Text(
-            '$count',
-            textDirection: TextDirection.ltr,
-          )
+          const SizedBox(
+            height: 20,
+          ),
+          CircleAvatar(
+            key: UniqueKey(),
+            radius: 100,
+            backgroundColor: Colors.black12,
+            backgroundImage: 
+            CachedNetworkImageProvider(
+              imageUrl2,
+              cacheManager: customCacheManager.cacheManager,
+              cacheKey: 'second_image',
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: clearCache, child: const Text('Clear cache')),
+          ElevatedButton(
+              onPressed: () => clearCache(index: 0),
+              child: const Text('Clear First Image')),
+          ElevatedButton(
+              onPressed: () => clearCache(index: 1),
+              child: const Text('Clear Second Image')),
         ],
       ),
     );
+  }
+
+  void clearCache({int? index}) {
+    imageCache.clear();
+    imageCache.clearLiveImages();
+
+    if (index != null) {
+      customCacheManager.cacheManager
+          .removeFile(index == 0 ? 'first_image' : 'second_image');
+    } else {
+      customCacheManager.cacheManager.emptyCache();
+    }
+
+    setState(() {});
   }
 }
